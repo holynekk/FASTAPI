@@ -1,5 +1,5 @@
 from typing import Optional
-from fastapi import FastAPI, Response, status, HTTPException
+from fastapi import FastAPI, Response, status, HTTPException, Depends
 from fastapi.params import Body
 from pydantic import BaseModel
 from random import randrange
@@ -7,6 +7,11 @@ from .credentials import *
 import psycopg2
 from psycopg2.extras import RealDictCursor
 import time
+from sqlalchemy.orm import Session
+from . import models
+from . database import engine, get_db
+
+models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
@@ -44,6 +49,11 @@ def find_index_post(id):
 @app.get("/")
 def root():
     return {"message": "Welcome to my api!!"}
+
+@app.get("/aqqlalchemy")
+def test_posts(db: Session = Depends(get_db)):
+    return {"status": "success"}
+
 
 @app.get("/posts")
 def get_posts():
