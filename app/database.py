@@ -1,6 +1,9 @@
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+import psycopg2
+from psycopg2.extras import RealDictCursor
+import time
 from .credentials import *
 
 SQLALCHEMY_DATABASE_URL = f'postgresql://{USER}:{DATABASE_PASSWORD}@{HOST}/{DATABASE}'
@@ -17,3 +20,17 @@ def get_db():
         yield db
     finally:
         db.close()
+
+
+# It's for the refrence to connect and use raw SQL. Our sqlalchemy does this automatically for us
+# while True:
+#     try:
+#         conn = psycopg2.connect(host=HOST, database=DATABASE, user=USER, password=DATABASE_PASSWORD, cursor_factory=RealDictCursor)
+#         cursor = conn.cursor()
+#         print("Database connection was successfull!")
+#         break
+#     except Exception as error:
+#         print("Connecting to database failed!")
+#         print("Error: ", error)
+#         time.sleep(2)
+
